@@ -1,0 +1,315 @@
+@import url("https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+#container {
+  background-color: rgb(0, 0, 0);
+  height: 120vh;
+}
+
+#navbarbg {
+  width: 1393px;
+  height: 58px;
+  opacity: 0.9;
+  background: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 6px rgba(156, 155, 155, 0.137);
+  margin-top: 5px;
+  position: fixed;
+  margin-left: 4%;
+  border-radius: 30px;
+}
+
+#NI2 {
+  display: flex;
+  justify-content: space-evenly;
+  position: fixed;
+  margin-left: 70px;
+  margin-top: 25px;
+}
+
+#hr {
+  color: white;
+  font-family: "rethink-sans", sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: 3px;
+  margin-left: 15px;
+}
+
+a {
+  color: white;
+  font-family: "rethink-sans", sans-serif;
+  font-size: 20px;
+  font-weight: normal;
+  text-decoration: none;
+}
+
+#h {
+  margin-left: 500px;
+}
+
+#fqr {
+  margin-left: 50px;
+}
+
+#com {
+  margin-left: 50px;
+}
+
+#pro {
+  margin-left: 50px;
+}
+
+#log {
+  margin-left: 50px;
+}
+
+#MealGrad {
+  background: linear-gradient(90deg, #d4145a 0%, #fbb03b 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: "Sora", sans-serif;
+  font-size: 64px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  display: inline-block;
+  margin-top: 100px;
+  margin-left: 550px;
+}
+
+#weekbtns {
+  margin-top: 20px;
+  margin-left: 200px;
+}
+
+button {
+  background-color: black;
+  width: 165px;
+  height: 76px;
+  display: inline-block;
+  color: white;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  font-family: "Inter", sans-serif;
+  border: 0px black;
+}
+
+button:hover {
+  background-color: #d9d9d98f;
+}
+
+#mspBG {
+  width: 1159px;
+  height: 400px;
+  border-radius: 24px;
+  background: #121212;
+  margin-left: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  opacity: 0;
+  animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+#Breakfast {
+  width: 357px;
+  height: 360px;
+  border-radius: 25px;
+  background: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#Lunch {
+  width: 357px;
+  height: 360px;
+  border-radius: 25px;
+  background: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#Dinner {
+  width: 357px;
+  height: 360px;
+  border-radius: 25px;
+  background: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#Breakfast:hover,
+#Lunch:hover,
+#Dinner:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+#bfhead {
+  color: #000;
+  font-family: "Inter", sans-serif;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-top: 20px;
+  text-align: center;
+}
+
+#luhead {
+  color: #000;
+  font-family: "Inter", sans-serif;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-top: 20px;
+  text-align: center;
+}
+
+#dinnhead {
+  color: #000;
+  font-family: "Inter", sans-serif;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-top: 20px;
+  text-align: center;
+}
+
+#bfPhoto {
+  width: 275px;
+  height: 203px;
+  background-color: #000;
+  border-radius: 34px;
+  margin-top: 10px;
+  margin-left: 11%;
+  color: white;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#bf_food_name {
+  color: #003333;
+  font-family: "Inter", sans-serif;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-top: 20px;
+  text-align: center;
+}
+
+#luPhoto {
+  width: 275px;
+  height: 203px;
+  background-color: #000;
+  border-radius: 34px;
+  margin-top: 10px;
+  margin-left: 11%;
+  color: white;
+}
+
+#lu_food_name {
+  color: #000;
+  font-family: "Inter", sans-serif;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-top: 20px;
+  text-align: center;
+}
+
+#dinPhoto {
+  width: 275px;
+  height: 203px;
+  background-color: #000;
+  border-radius: 34px;
+  margin-top: 10px;
+  margin-left: 11%;
+  color: white;
+}
+
+#din_food_name {
+  color: #000;
+  font-family: "Inter", sans-serif;
+  font-size: 36px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+  margin-top: 20px;
+  text-align: center;
+}
+
+#Submit_Text {
+  color: #e7c300;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin-top: 20px;
+}
+
+#FinalSubmitbtn {
+  width: 220px;
+  height: 60px;
+  border-radius: 20px;
+  border: 3px solid #fff;
+  background: #05a12a;
+  margin-top: 40px;
+  margin-left: 100px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#FinalSubmitbtn:hover {
+  background-color: #22226e;
+  transform: scale(1.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+#Skipbtn {
+  width: 220px;
+  height: 60px;
+  border-radius: 20px;
+  border: 3px solid #fff;
+  background: #500000;
+  margin-top: 40px;
+  margin-left: 500px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#Skipbtn:hover {
+  background-color: #5f226e;
+  transform: scale(1.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+#FoodImage {
+  width: 275px;
+  height: 203px;
+  /* background-color: #000; */
+  border-radius: 34px;
+  margin-top: 10px;
+  margin-left: 11%;
+  color: white;
+}
+
+#omg {
+  color: white;
+}
