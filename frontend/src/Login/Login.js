@@ -50,26 +50,39 @@ function LoginBox() {
       });
 
       if (response.status === 200) {
-        console.log("Login successful"); // Add this line
+        console.log("Login successful");
+        console.log("Full response data:", response.data);
+
+        const residentId = response.data.residentID; // Store the user ID in local storage
+        localStorage.setItem("residentId", residentId);
+        console.log("resident ID stored:", residentId);
+
+        // Store resident name only if the user type is "hostel_resident"
+        if (userType === "hostel_resident") {
+          localStorage.setItem("residentname", response.data.residentname);
+          console.log("Resident name stored:", response.data.residentname);
+        }
+
         // Redirect based on user type
         switch (userType) {
           case "hostel_resident":
             navigate("/resident_home");
             break;
           case "warden":
-            navigate("/warden/home_page/homePage.js");
+            navigate("/wardenHome");
             break;
           case "kitchen_department":
-            navigate("/kitchen/home_page/homePage.js");
+            navigate("/kitchenHome");
             break;
           case "admin":
-            navigate("/admin/home_page/homePage.js");
+            navigate("/adminHome");
             break;
           default:
             setErrorMessage("Invalid user type selected.");
         }
       }
     } catch (error) {
+      console.error("Login error:", error); // Log error for debugging
       setErrorMessage(error.response?.data?.message || "Login failed");
     }
   };

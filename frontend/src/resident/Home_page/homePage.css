@@ -34,7 +34,7 @@ body {
   z-index: 0;
 }
 
-#navbar {
+#Homenavbar {
   width: 1393px;
   height: 58px;
   border-radius: 20px;
@@ -51,7 +51,7 @@ body {
   align-content: center;
 }
 
-#navitems {
+#Homenavitems {
   display: flex;
   justify-content: space-evenly;
   position: fixed;
@@ -60,7 +60,7 @@ body {
   text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
 }
 
-#hr {
+#Homehr {
   color: white;
   font-family: "rethink-sans", sans-serif;
   font-size: 20px;
@@ -79,19 +79,19 @@ a {
   text-decoration: none;
 }
 
-#Food_QR {
+#HomeFood_QR {
   margin-left: 650px;
 }
 
-#Compalints {
+#HomeCompalints {
   margin-left: 50px;
 }
 
-#Profile {
+#HomeProfile {
   margin-left: 50px;
 }
 
-#logout {
+#Homelogout {
   margin-left: 50px;
 }
 

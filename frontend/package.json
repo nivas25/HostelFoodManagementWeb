@@ -9,10 +9,11 @@
     "eject": "react-scripts eject"
   },
   "dependencies": {
+    "qrcode.react": "^4.1.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "react-scripts": "5.0.1",
     "react-router-dom": "^6.0.0",
+    "react-scripts": "^5.0.1",
     "web-vitals": "^2.1.4"
   },
   "browserslist": {

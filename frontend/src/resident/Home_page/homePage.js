@@ -1,8 +1,9 @@
 import "./homePage.css";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-function NavBar() {
-  return <div id="navbar"></div>;
+function HomeNavBar() {
+  return <div id="Homenavbar"></div>;
 }
 
 function FoodImage() {
@@ -11,20 +12,20 @@ function FoodImage() {
 
 function NavItems() {
   return (
-    <div id="navitems">
-      <h1 id="hr">HOSTEL RESIDENT</h1>
-      <a href="#" id="Food_QR">
-        Food QR
-      </a>
-      <a href="#" id="Compalints">
+    <div id="Homenavitems">
+      <h1 id="Homehr">HOSTEL RESIDENT</h1>
+      <Link to="/foodqr" id="HomeFood_QR">
+        FoodQR
+      </Link>
+      <a href="#" id="HomeCompalints">
         Complaints
       </a>
-      <a href="#" id="Profile">
+      <Link to="/residentprofile" id="HomeProfile">
         Profile
-      </a>
-      <a href="#" id="logout">
+      </Link>
+      <Link to="/" id="Homelogout">
         Logout
-      </a>
+      </Link>
     </div>
   );
 }
@@ -45,7 +46,7 @@ function HomePage() {
   return (
     <div id="container">
       <FoodImage />
-      <NavBar />
+      <HomeNavBar />
       <NavItems />
       <MealSelect />
     </div>
