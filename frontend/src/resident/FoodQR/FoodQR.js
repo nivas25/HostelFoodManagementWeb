@@ -2,14 +2,22 @@ import React, { useState, useRef, useEffect } from "react";
 import "./FoodQR.css";
 import { Link } from "react-router-dom";
 import { QRCodeCanvas } from "qrcode.react";
+import { v4 as uuidv4 } from "uuid";
 
 function NavbarBG() {
   return <div id="navbarbg"></div>;
 }
 
 function NavbarItems2() {
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("residentname");
+    localStorage.removeItem("residentId");
+    window.location.href = "/";
+  };
   return (
     <div id="NI2">
+      <img id="hosteliconqr" src="/FoodIcons/hostel .png" alt="HostelIcon" />
       <h1 id="fqrhr">HOSTEL RESIDENT</h1>
       <Link to="/resident_home" id="fqrh">
         Home
@@ -20,10 +28,10 @@ function NavbarItems2() {
       {/* <a href="#" id="com">
         Complaints
       </a> */}
-      {/* <Link to="/residentprofile" id="pro">
+      <Link to="/residentprofile" id="pro">
         Profile
-      </Link> */}
-      <Link to="/" id="log">
+      </Link>
+      <Link to="/" id="log" onClick={handleLogout}>
         Logout
       </Link>
     </div>
@@ -31,7 +39,12 @@ function NavbarItems2() {
 }
 
 function FoodQRHeading() {
-  return <h1 id="FoodQRGrad">Food QR</h1>;
+  return (
+    <div>
+      <img src="/FoodIcons/qrcode.png" id="qrcodeicon" alt="Logo" />,
+      <h1 id="FoodQRGrad">Food QR</h1>
+    </div>
+  );
 }
 
 function WeekButtonsQR({ setDay }) {
@@ -89,6 +102,17 @@ function QRDownload({ qrContent }) {
   );
 }
 
+function getWeekNumber(d) {
+  d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  // Set to nearest Thursday: current date + 4 - current day number
+  // Make Sunday's day number 7
+  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+  // Get first day of year
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  // Calculate full weeks to nearest Thursday
+  return Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+}
+
 function FoodQR() {
   const [selectedDay, setSelectedDay] = useState("Monday");
   const [qrContent, setQrContent] = useState(null);
@@ -104,7 +128,11 @@ function FoodQR() {
 
     if (selectedMeal && selectedMeal.selection === "Yes I will Eat") {
       const today = new Date().toLocaleDateString("en-GB"); // Format: DD/MM/YYYY
-      const qrData = `${today}_${residentName}_${residentId}`;
+      const bookingWeek = `2024-W${getWeekNumber(new Date())}`;
+      const uniqueID = uuidv4(); // Generate a unique ID
+
+      //residentId_residentName_BookingWeek_Selection_UniqueID
+      const qrData = `${residentId}_${residentName}_${bookingWeek}_${selectedMeal.selection}_${uniqueID}`;
       setQrContent(qrData);
     } else {
       setQrContent(null); // No QR if the meal isn’t booked

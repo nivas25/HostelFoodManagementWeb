@@ -17,6 +17,7 @@ function NavbarItems2() {
 
   return (
     <div id="NI2">
+      <img id="hosteliconms" src="/FoodIcons/hostel .png" alt="HostelIcon" />
       <h1 id="mshr">HOSTEL RESIDENT</h1>
       <Link to="/resident_home" id="msh">
         Home
@@ -27,9 +28,9 @@ function NavbarItems2() {
       {/* <a href="#" id="com">
         Complaints
       </a> */}
-      {/* <Link to="/residentprofile" id="pro">
+      <Link to="/residentprofile" id="pro">
         Profile
-      </Link> */}
+      </Link>
       <Link to="/" id="log" onClick={handleLogout}>
         Logout
       </Link>
@@ -128,26 +129,46 @@ function MealSelectionPane({ day, isPast }) {
   );
 }
 
-function FinalSubmitBtn({ disabled, onSubmit }) {
+function FinalSubmitBtn({ day, disabledDays, bookedDays, onSubmit }) {
+  const isDisabled = disabledDays.includes(day) || bookedDays.includes(day);
+
   return (
     <div>
       <button
         id="Skipbtn"
-        disabled={disabled}
         onClick={() => onSubmit("No food selected")}
+        style={{
+          filter: isDisabled ? "grayscale(70%)" : "none",
+          backgroundColor: isDisabled ? "#ccc" : "#ffffff",
+          color: "#941212",
+          transition: "background-color 0.3s ease, filter 0.3s ease",
+          padding: "10px 15px",
+          border: "3px solid black ",
+          cursor: isDisabled ? "not-allowed" : "pointer",
+        }}
+        disabled={isDisabled}
       >
         Skip
       </button>
       <button
         id="FinalSubmitbtn"
-        disabled={disabled}
         onClick={() => onSubmit("Yes I will Eat")}
+        style={{
+          filter: isDisabled ? "grayscale(70%)" : "none",
+          backgroundColor: isDisabled ? "#ccc" : "#fff",
+          color: "#186b1b",
+          transition: "background-color 0.3s ease, filter 0.3s ease",
+          padding: "10px 15px",
+          border: "3px solid black ",
+          cursor: isDisabled ? "not-allowed" : "pointer",
+        }}
+        disabled={isDisabled}
       >
         Yes I will Eat
       </button>
       <p id="Submit_Text">
         Final submission Button. Once Submitted it’s Final.
-        <br /> No Changes will be entertained
+        <br /> No Changes will be entertained.
       </p>
     </div>
   );
@@ -160,7 +181,6 @@ function MealSelectionPage() {
   const [bookedDays, setBookedDays] = useState([]);
   const [fadeClass, setFadeClass] = useState("fade-in");
   const [buttonsDisabled, setButtonsDisabled] = useState(false);
-  const [isSkipSelected, setIsSkipSelected] = useState(false); // Track if "Skip" is selected
 
   useEffect(() => {
     const today = new Date();
@@ -281,15 +301,6 @@ function MealSelectionPage() {
     }
   };
 
-  const handleSkip = () => {
-    setIsSkipSelected(true); // Set "Skip" state to true
-    setMealSelections((prev) => ({
-      ...prev,
-      [selectedDay]: { selection: "No food selected" },
-    }));
-    setButtonsDisabled(true);
-  };
-
   const isPastDay = disabledDays.includes(selectedDay);
   const changeDayWithAnimation = (day) => {
     setFadeClass("fade-out");
@@ -312,12 +323,13 @@ function MealSelectionPage() {
         setDay={changeDayWithAnimation}
         disabledDays={disabledDays}
         bookedDays={bookedDays}
-        isSkipSelected={isSkipSelected} // Pass the "Skip" state
       />
       <div className={fadeClass}>{memoizedMealSelectionPane}</div>
       <FinalSubmitBtn
-        disabled={buttonsDisabled}
-        onSubmit={isSkipSelected ? handleSkip : handleMealSelection}
+        day={selectedDay}
+        disabledDays={disabledDays}
+        bookedDays={bookedDays}
+        onSubmit={handleMealSelection}
       />
     </div>
   );

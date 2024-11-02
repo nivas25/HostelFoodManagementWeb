@@ -7,11 +7,11 @@
 }
 
 #proh {
-  margin-left: 400px;
+  margin-left: 500px;
 }
 
 #prohr {
-  margin-left: 100px;
+  margin-left: 30px;
   color: rgb(255, 119, 34);
   font-family: "rethink-sans", sans-serif;
   font-size: 20px;
@@ -20,6 +20,14 @@
   line-height: normal;
   letter-spacing: 2px;
 }
+
+#hosteliconpro {
+  margin-top: -10px;
+  margin-left: 10px;
+  width: 40px;
+  height: 40px;
+}
+
 #Profile {
   background: linear-gradient(90deg, #d4145a 0%, #fbb03b 100%);
   background-clip: text;
@@ -35,8 +43,8 @@
   margin-left: 650px;
 }
 
-#h {
-  margin-left: 450px;
+#proh {
+  margin-left: 550px;
 }
 
 #mealselection {
@@ -64,7 +72,7 @@
   border-radius: 43px;
   background: #e6e8dd;
   margin-left: 70px;
-  margin-top: 10px;
+  margin-top: 50px;
 }
 
 #ProfilePhotoWrapper {
@@ -164,9 +172,9 @@
 #breakfastProfie,
 #lunchProfie,
 #DinnerProfile {
-  margin-left: -124px;
+  /* margin-left: 5px; */
   margin-top: 7px;
-  width: 255%;
+  width: 400px;
   height: 145px;
   background-color: #ffffff;
   color: rgb(51, 51, 51);

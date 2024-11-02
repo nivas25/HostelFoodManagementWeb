@@ -35,7 +35,14 @@
   font-weight: 600;
   line-height: normal;
   letter-spacing: 2px;
-  margin-left: 100px;
+  margin-left: 50px;
+}
+
+#hosteliconms {
+  margin-top: -10px;
+  margin-left: 10px;
+  width: 40px;
+  height: 40px;
 }
 
 a {
@@ -47,7 +54,7 @@ a {
 }
 
 #msh {
-  margin-left: 700px;
+  margin-left: 600px;
 }
 
 #fqr {
@@ -322,7 +329,7 @@ button:hover {
 }
 
 #Skipbtn:hover {
-  background-color: rgb(244, 85, 0);
+  background-color: rgb(122, 0, 0);
   color: white;
   transform: scale(1.05);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);

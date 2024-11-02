@@ -12,8 +12,15 @@ function FoodImage() {
 }
 
 function NavItems() {
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("residentname");
+    localStorage.removeItem("residentId");
+    window.location.href = "/";
+  };
   return (
     <div id="Homenavitems">
+      <img id="hosteliconnav" src="/FoodIcons/hostel .png" alt="HostelIcon" />
       <h1 id="Homehr">HOSTEL RESIDENT</h1>
       <Link to="/foodqr" id="HomeFood_QR">
         FoodQR
@@ -21,10 +28,10 @@ function NavItems() {
       {/* <a href="#" id="HomeCompalints">
         Complaints
       </a> */}
-      {/* <Link to="/residentprofile" id="HomeProfile">
+      <Link to="/residentprofile" id="HomeProfile">
         Profile
-      </Link> */}
-      <Link to="/" id="Homelogout">
+      </Link>
+      <Link to="/" id="Homelogout" onClick={handleLogout}>
         Logout
       </Link>
     </div>

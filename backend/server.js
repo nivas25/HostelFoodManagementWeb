@@ -27,7 +27,7 @@ mongoose
 // Use the resident routes
 app.use("/api/residentLogin", loginResidentRoutes);
 app.use("/api/mealSelectionRoutes", mealSelectionRoutes);
-app.use("api/profileMealSelection", profileMealSelection);
+app.use("/api/profileMealSelection", profileMealSelection);
 
 // Start the server
 app.listen(PORT, () => {

@@ -1,34 +1,36 @@
-// controllers/profileController.js
-const Resident = require("../../models/resident/residentDetails"); // Assuming this is your resident model
-const MealSelection = require("../../models/resident/mealSelection"); // Assuming this is your meal selection model
+const Resident = require("../../models/resident/residentDetails");
+const MealSelection = require("../../models/resident/mealSelection");
 
-const getResidentProfileMealSelection = async (req, res) => {
+const getResidentById = async (req, res) => {
+  const residentId = req.params.residentID;
   try {
-    const residentId = req.residentId; // Adjust based on your authentication setup
-
-    // Fetch resident profile from the Resident collection
-    const resident = await Resident.findById(residentId);
+    const resident = await Resident.findOne({ residentID: residentId }); // Query by residentId
     if (!resident) {
       return res.status(404).json({ message: "Resident not found" });
     }
-
-    // Fetch meal selections for this resident from the MealSelection collection
-    const mealSelections = await MealSelection.find({ residentId }); // Assuming residentId is the field in MealSelection
-
-    // Combine and structure the response
-    res.status(200).json({
-      resident: {
-        residentName: resident.residentName,
-        email: resident.email,
-        residentId: resident.residentId,
-        address: resident.address,
-      },
-      mealSelections,
-    });
+    res.json(resident); // Return resident data
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error fetching profile data" });
+    res.status(500).json({ message: error.message });
   }
 };
 
-module.exports = { getResidentProfileMealSelection };
+// Fetch meal selection details by resident ID
+const getMealSelectionByResidentId = async (req, res) => {
+  try {
+    const residentId = req.params.residentID;
+    const mealSelection = await MealSelection.findOne({
+      residentId: residentId,
+    });
+
+    if (!mealSelection) {
+      return res.status(404).json({ message: "Meal selection not found" });
+    }
+
+    res.status(200).json(mealSelection);
+  } catch (error) {
+    console.error("Error fetching meal selection:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+module.exports = { getResidentById, getMealSelectionByResidentId };
