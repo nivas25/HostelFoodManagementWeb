@@ -27,14 +27,7 @@
   margin-top: 25px;
 }
 
-#logo1 {
-  width: 70px;
-  height: 70px;
-  margin-left: 200px;
-  margin-top: 80px;
-}
-
-#hr {
+#mshr {
   color: rgb(255, 119, 34);
   font-family: "rethink-sans", sans-serif;
   font-size: 20px;
@@ -53,8 +46,8 @@ a {
   text-decoration: none;
 }
 
-#h {
-  margin-left: 580px;
+#msh {
+  margin-left: 700px;
 }
 
 #fqr {
@@ -87,7 +80,14 @@ a {
   line-height: normal;
   display: inline-block;
   margin-top: 100px;
-  margin-left: 300px;
+  margin-left: 40px;
+}
+
+#logo1 {
+  width: 70px;
+  height: 70px;
+  margin-left: 500px;
+  margin-top: 80px;
 }
 
 #weekbtns {
@@ -96,7 +96,7 @@ a {
 }
 
 button {
-  background-color: #374552;
+  background-color: #052746;
   width: 165px;
   height: 60px;
   display: inline-block;
@@ -107,11 +107,12 @@ button {
   line-height: normal;
   font-family: "Inter", sans-serif;
   border: 0px black;
+  cursor: pointer;
 }
 
 button:hover {
-  background-color: #d9d9d98f;
-  color: black;
+  background-color: #a6a4a48f;
+  color: rgb(0, 0, 0);
 }
 
 #mon {
@@ -297,6 +298,7 @@ button:hover {
   margin-top: 40px;
   margin-left: 100px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
 }
 
 #FinalSubmitbtn:hover {
@@ -316,6 +318,7 @@ button:hover {
   margin-top: 40px;
   margin-left: 540px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
 }
 
 #Skipbtn:hover {

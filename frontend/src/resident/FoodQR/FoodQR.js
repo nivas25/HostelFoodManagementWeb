@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "./FoodQR.css";
 import { Link } from "react-router-dom";
 import { QRCodeCanvas } from "qrcode.react";
@@ -10,19 +10,19 @@ function NavbarBG() {
 function NavbarItems2() {
   return (
     <div id="NI2">
-      <h1 id="hr">HOSTEL RESIDENT</h1>
-      <Link to="/resident_home" id="h">
+      <h1 id="fqrhr">HOSTEL RESIDENT</h1>
+      <Link to="/resident_home" id="fqrh">
         Home
       </Link>
       <Link to="/meal-selection" id="mealselect">
         Meal Selection
       </Link>
-      <a href="#" id="com">
+      {/* <a href="#" id="com">
         Complaints
-      </a>
-      <Link to="/residentprofile" id="pro">
+      </a> */}
+      {/* <Link to="/residentprofile" id="pro">
         Profile
-      </Link>
+      </Link> */}
       <Link to="/" id="log">
         Logout
       </Link>
@@ -34,7 +34,7 @@ function FoodQRHeading() {
   return <h1 id="FoodQRGrad">Food QR</h1>;
 }
 
-function WeekButtonsQR({ setDay, disabledDays }) {
+function WeekButtonsQR({ setDay }) {
   const days = [
     "Monday",
     "Tuesday",
@@ -44,7 +44,6 @@ function WeekButtonsQR({ setDay, disabledDays }) {
     "Saturday",
     "Sunday",
   ];
-
   return (
     <div id="weekbtns">
       {days.map((day) => (
@@ -60,14 +59,12 @@ function WeekButtonsQR({ setDay, disabledDays }) {
   );
 }
 
-function QRDownload() {
+function QRDownload({ qrContent }) {
   const qrRef = useRef();
 
   const downloadQR = () => {
     const qrCanvas = qrRef.current.querySelector("canvas");
     const qrURL = qrCanvas.toDataURL("image/png");
-
-    // Create a link element to trigger download
     const downloadLink = document.createElement("a");
     downloadLink.href = qrURL;
     downloadLink.download = "QR_Code.png";
@@ -77,24 +74,52 @@ function QRDownload() {
   return (
     <div id="QRDownBG">
       <div id="ActualQR" ref={qrRef}>
-        <QRCodeCanvas value="https://your-url-or-content-here.com" size={300} />
+        {qrContent ? (
+          <QRCodeCanvas value={qrContent} size={300} />
+        ) : (
+          <p>No meal selected yet</p>
+        )}
       </div>
-      <button id="QRDownbtn" onClick={downloadQR}>
-        Download
-      </button>
+      {qrContent && (
+        <button id="QRDownbtn" onClick={downloadQR}>
+          Download
+        </button>
+      )}
     </div>
   );
 }
 
 function FoodQR() {
+  const [selectedDay, setSelectedDay] = useState("Monday");
+  const [qrContent, setQrContent] = useState(null);
+  const residentId = localStorage.getItem("residentId");
+  const residentName = localStorage.getItem("residentname");
+
+  useEffect(() => {
+    // Fetch meal booking status for the selected day
+    const mealSelectionsKey = `mealSelections_${residentId}`;
+    const mealSelections =
+      JSON.parse(localStorage.getItem(mealSelectionsKey)) || {};
+    const selectedMeal = mealSelections[selectedDay];
+
+    if (selectedMeal && selectedMeal.selection === "Yes I will Eat") {
+      const today = new Date().toLocaleDateString("en-GB"); // Format: DD/MM/YYYY
+      const qrData = `${today}_${residentName}_${residentId}`;
+      setQrContent(qrData);
+    } else {
+      setQrContent(null); // No QR if the meal isn’t booked
+    }
+  }, [selectedDay, residentId, residentName]);
+
   return (
-    <div id="container">
+    <div id="foodQRContainer">
       <NavbarBG />
       <NavbarItems2 />
       <FoodQRHeading />
-      <WeekButtonsQR />
-      <QRDownload />
+      <WeekButtonsQR setDay={setSelectedDay} />
+      <QRDownload qrContent={qrContent} />
     </div>
   );
 }
+
 export default FoodQR;

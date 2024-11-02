@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import "./ResProfile.css";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 function NavbarBG() {
   return <div id="navbarbg"></div>;
@@ -9,8 +10,8 @@ function NavbarBG() {
 function NavbarItems2() {
   return (
     <div id="NI2">
-      <h1 id="hr">HOSTEL RESIDENT</h1>
-      <Link to="/resident_home" id="h">
+      <h1 id="prohr">HOSTEL RESIDENT</h1>
+      <Link to="/resident_home" id="proh">
         Home
       </Link>
       <Link to="/foodqr" id="fqr">
@@ -33,57 +34,70 @@ function ProfileHeading() {
   return <h1 id="ProfileGrad">Profile</h1>;
 }
 
-function ProfileBoxBG() {
+function ProfileBoxBG({ residentData }) {
   return (
     <div id="ProfileBoxBg">
       <div id="ProfilePhotoWrapper">
-        <img id="ProfilePhoto" src="path/to/photo.jpg" alt="Profile Photo" />
+        <img
+          id="ProfilePhoto"
+          src="/FoodIcons/Profile.jpg"
+          alt="Profile Photo"
+        />
       </div>
       <div id="ProfileDetails">
-        <p id="ResidentName">Name:</p>
-        <p id="ResidentEmailID">Email ID:</p>
-        <p id="Room No">Room No:</p>
-        <p id="Resident ID">Resident ID:</p>
+        <p id="ResidentName">Name: {residentData.residentName}</p>
+        <p id="ResidentEmailID">Email ID: {residentData.email}</p>
+        <p id="ResidentID">Resident ID: {residentData.residentId}</p>
+        <p id="Address">Address: {residentData.address}</p>
       </div>
     </div>
   );
 }
 
 function BookingsHeading() {
-  return <h1 id="BookingsHeading">You're Bookings</h1>;
+  return <h1 id="BookingsHeading">Your Bookings</h1>;
 }
 
-function WeekButtonsInProfile() {
+function WeekButtonsInProfile({ onSelectDay }) {
+  const days = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
   return (
     <div id="BtnsBGProfileWrapper">
       <div id="BtnsBGProfile">
-        <button id="monpro">Monday</button>
-        <button id="tuepro">Tuesday</button>
-        <button id="wedpro">Wednesday</button>
-        <button id="thurspro">Thursday</button>
-        <button id="fripro">Friday</button>
-        <button id="satpro">Saturday</button>
-        <button id="sunpro">Sunday</button>
+        {days.map((day) => (
+          <button key={day} onClick={() => onSelectDay(day)}>
+            {day}
+          </button>
+        ))}
       </div>
     </div>
   );
 }
 
-function BookingsDetailsInProfile() {
+function BookingsDetailsInProfile({ selectedMealData }) {
+  if (!selectedMealData) return <div>Select a day to view details</div>;
+
   return (
     <div id="BookingDetailsBGWrapper">
       <div id="BookingDetailsBG">
-        <div id="breakfastProfie">
+        <div id="breakfastProfile">
           <p id="breakHead">Breakfast</p>
-          <p id="breakfastDetails">Dosa</p>
+          <p id="breakfastDetails">{selectedMealData.breakfastDish || "N/A"}</p>
         </div>
-        <div id="lunchProfie">
+        <div id="lunchProfile">
           <p id="lunchHead">Lunch</p>
-          <p id="lunchDetails">Chicken Curry</p>
+          <p id="lunchDetails">{selectedMealData.lunchDish || "N/A"}</p>
         </div>
         <div id="DinnerProfile">
           <p id="dinnerHead">Dinner</p>
-          <p id="dinnerDetails">Chicken Biryani</p>
+          <p id="dinnerDetails">{selectedMealData.dinnerDish || "N/A"}</p>
         </div>
       </div>
     </div>
@@ -91,17 +105,41 @@ function BookingsDetailsInProfile() {
 }
 
 function ResProfile() {
+  const [residentData, setResidentData] = useState({});
+  const [mealSelections, setMealSelections] = useState([]);
+  const [selectedMealData, setSelectedMealData] = useState(null);
+
+  useEffect(() => {
+    const fetchResidentData = async () => {
+      try {
+        // Assuming your backend endpoint returns both resident and meal selections
+        const response = await axios.get(
+          "http://localhost:5000/api/profileMealSelection"
+        );
+        setResidentData(response.data.resident); // Adjust based on your API response
+        setMealSelections(response.data.mealSelections); // Ensure this aligns with your API
+      } catch (error) {
+        console.error("Error fetching data", error);
+      }
+    };
+
+    fetchResidentData();
+  }, []);
+
+  const handleSelectDay = (day) => {
+    const selectedMeal = mealSelections.find((meal) => meal.bookedDay === day);
+    setSelectedMealData(selectedMeal || {});
+  };
+
   return (
-    <div id="container">
+    <div id="resprocontainer">
       <NavbarBG />
       <NavbarItems2 />
       <ProfileHeading />
-      <ProfileBoxBG />
+      <ProfileBoxBG residentData={residentData} />
       <BookingsHeading />
-
-      <WeekButtonsInProfile />
-
-      <BookingsDetailsInProfile />
+      <WeekButtonsInProfile onSelectDay={handleSelectDay} />
+      <BookingsDetailsInProfile selectedMealData={selectedMealData} />
     </div>
   );
 }

@@ -43,11 +43,14 @@ function LoginBox() {
     setErrorMessage("");
 
     try {
-      const response = await axios.post("http://localhost:5000/api/login", {
-        username,
-        password,
-        userType,
-      });
+      const response = await axios.post(
+        "http://localhost:5000/api/residentLogin",
+        {
+          username,
+          password,
+          userType,
+        }
+      );
 
       if (response.status === 200) {
         console.log("Login successful");

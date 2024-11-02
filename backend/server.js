@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const loginResidentRoutes = require("./routes/resident/login"); // Adjust the path if needed
 const mealSelectionRoutes = require("./routes/resident/mealSelection");
+const profileMealSelection = require("./routes/resident/profileMealSelection");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -24,8 +25,9 @@ mongoose
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // Use the resident routes
-app.use("/api", loginResidentRoutes);
-app.use("/api", mealSelectionRoutes);
+app.use("/api/residentLogin", loginResidentRoutes);
+app.use("/api/mealSelectionRoutes", mealSelectionRoutes);
+app.use("api/profileMealSelection", profileMealSelection);
 
 // Start the server
 app.listen(PORT, () => {

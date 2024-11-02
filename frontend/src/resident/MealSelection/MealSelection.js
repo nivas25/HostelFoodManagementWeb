@@ -8,22 +8,29 @@ function NavbarBG() {
 }
 
 function NavbarItems2() {
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("residentname");
+    localStorage.removeItem("residentId");
+    window.location.href = "/";
+  };
+
   return (
     <div id="NI2">
-      <h1 id="hr">HOSTEL RESIDENT</h1>
-      <Link to="/resident_home" id="h">
+      <h1 id="mshr">HOSTEL RESIDENT</h1>
+      <Link to="/resident_home" id="msh">
         Home
       </Link>
       <Link to="/foodqr" id="fqr">
         Food QR
       </Link>
-      <a href="#" id="com">
+      {/* <a href="#" id="com">
         Complaints
-      </a>
-      <Link to="/residentprofile" id="pro">
+      </a> */}
+      {/* <Link to="/residentprofile" id="pro">
         Profile
-      </Link>
-      <Link to="/" id="log">
+      </Link> */}
+      <Link to="/" id="log" onClick={handleLogout}>
         Logout
       </Link>
     </div>
@@ -33,13 +40,13 @@ function NavbarItems2() {
 function MealHeading() {
   return (
     <div>
-      <img src="/FoodIcons/1.png" id="logo1" alt="Logo" />
+      <img src="/FoodIcons/4.png" id="logo1" alt="Logo" />
       <h1 id="MealGrad">Meal Selection</h1>
     </div>
   );
 }
 
-function WeekButtons({ setDay, disabledDays, bookedDays }) {
+function WeekButtons({ setDay, disabledDays, bookedDays, isSkipSelected }) {
   const days = [
     "Monday",
     "Tuesday",
@@ -60,9 +67,18 @@ function WeekButtons({ setDay, disabledDays, bookedDays }) {
           style={{
             filter:
               disabledDays.includes(day) || bookedDays.includes(day)
-                ? "grayscale(100%)"
+                ? "grayscale(70%)"
                 : "none",
-            color: bookedDays.includes(day) ? "#888" : "#000", // Grayscale color
+            backgroundColor: disabledDays.includes(day) ? "#ccc" : "#4CAF50",
+            color: "#fff",
+            transition: "background-color 0.3s ease, filter 0.3s ease",
+            padding: "10px 15px",
+            border: "none",
+
+            cursor:
+              disabledDays.includes(day) || bookedDays.includes(day)
+                ? "not-allowed"
+                : "pointer",
           }}
           disabled={disabledDays.includes(day) || bookedDays.includes(day)}
         >
@@ -144,13 +160,25 @@ function MealSelectionPage() {
   const [bookedDays, setBookedDays] = useState([]);
   const [fadeClass, setFadeClass] = useState("fade-in");
   const [buttonsDisabled, setButtonsDisabled] = useState(false);
+  const [isSkipSelected, setIsSkipSelected] = useState(false); // Track if "Skip" is selected
 
   useEffect(() => {
     const today = new Date();
     const currentDay = today.toLocaleDateString("en-US", { weekday: "long" });
     // const currentDay = "Sunday";
+    const residentId = localStorage.getItem("residentId");
 
-    // Reset data on Sunday
+    // Fetch stored selections and booked days for the logged-in user
+    const mealSelectionsKey = `mealSelections_${residentId}`;
+    const storedSelections =
+      JSON.parse(localStorage.getItem(mealSelectionsKey)) || {};
+    const storedBookedDays =
+      JSON.parse(localStorage.getItem(`bookedDays_${residentId}`)) || [];
+
+    setMealSelections(storedSelections);
+    setBookedDays(storedBookedDays);
+
+    // Reset data on Sunday only if the user is switching accounts or if it is a new week
     if (currentDay === "Sunday") {
       localStorage.removeItem("bookedDays");
       localStorage.removeItem("mealSelections");
@@ -158,14 +186,6 @@ function MealSelectionPage() {
       setBookedDays([]);
       setMealSelections({});
     } else {
-      const storedSelections =
-        JSON.parse(localStorage.getItem("mealSelections")) || {};
-      const storedBookedDays =
-        JSON.parse(localStorage.getItem("bookedDays")) || [];
-
-      setMealSelections(storedSelections);
-      setBookedDays(storedBookedDays);
-
       const daysOfWeek = [
         "Monday",
         "Tuesday",
@@ -176,21 +196,16 @@ function MealSelectionPage() {
         "Sunday",
       ];
       const currentDayIndex = daysOfWeek.indexOf(currentDay);
-      const pastDays = daysOfWeek.slice(0, currentDayIndex + 1); // Include today in disabledDays
-
+      const pastDays = daysOfWeek.slice(0, currentDayIndex + 1);
       setDisabledDays(pastDays);
     }
   }, []);
 
   const handleMealSelection = async (message) => {
-    const userId = localStorage.getItem("userId");
     const residentname = localStorage.getItem("residentname");
-    const residentID = localStorage.getItem("residentId");
+    const residentId = localStorage.getItem("residentId");
 
-    if (!userId || !residentname) {
-      console.error(
-        "User ID or Resident Name not found. Ensure the user is logged in."
-      );
+    if (!residentId || !residentname) {
       alert("Please log in again.");
       return;
     }
@@ -202,22 +217,21 @@ function MealSelectionPage() {
 
     setButtonsDisabled(true);
 
+    const isEating = message === "Yes I will Eat";
     const selectedMeals = {
       residentname,
-      residentId: residentID,
+      residentId,
       selectedDay,
       selection: message,
-      breakfastDish: menuData[selectedDay].breakfast.name,
-      lunchDish: menuData[selectedDay].lunch.name,
-      dinnerDish: menuData[selectedDay].dinner.name,
+      breakfastDish: isEating ? menuData[selectedDay].breakfast.name : null,
+      lunchDish: isEating ? menuData[selectedDay].lunch.name : null,
+      dinnerDish: isEating ? menuData[selectedDay].dinner.name : null,
       date: new Date().toISOString(),
     };
 
-    console.log("Submitting Meal Selection:", selectedMeals);
-
     try {
       const response = await fetch(
-        "http://localhost:5000/api/save-meal-selection",
+        "http://localhost:5000/api/mealSelectionRoutes/save",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -226,54 +240,54 @@ function MealSelectionPage() {
       );
 
       if (response.ok) {
-        console.log("Meal selection saved successfully!");
         alert("Your meal selection has been saved.");
-
-        const incrementResponse = await fetch(
-          "http://localhost:5000/api/increment-count",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              day: selectedDay,
-              meal: message === "Yes I will Eat" ? "all" : "none", // Adjust according to meal type if needed
-            }),
-          }
+        const mealSelectionsKey = `mealSelections_${residentId}`;
+        const updatedSelections = {
+          ...mealSelections,
+          [selectedDay]: selectedMeals,
+        };
+        localStorage.setItem(
+          mealSelectionsKey,
+          JSON.stringify(updatedSelections)
         );
+        setMealSelections(updatedSelections);
 
-        if (!incrementResponse.ok) {
-          console.error("Failed to increment meal count.");
-          alert("There was an error updating the meal count.");
+        if (isEating) {
+          const updatedBookedDays = [...bookedDays, selectedDay];
+          localStorage.setItem(
+            `bookedDays_${residentId}`,
+            JSON.stringify(updatedBookedDays)
+          );
+          setBookedDays(updatedBookedDays);
         }
 
-        setMealSelections((prev) => {
-          const updatedSelections = { ...prev, [selectedDay]: selectedMeals };
-          localStorage.setItem(
-            "mealSelections",
-            JSON.stringify(updatedSelections)
-          );
-          return updatedSelections;
+        await fetch("http://localhost:5000/api/mealSelectionRoutes/increment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            day: selectedDay,
+            meal: isEating ? "all" : "none",
+          }),
         });
-
-        setBookedDays((prev) => {
-          const updatedBookedDays = [...prev, selectedDay];
-          localStorage.setItem("bookedDays", JSON.stringify(updatedBookedDays));
-          return updatedBookedDays;
-        });
-
-        setButtonsDisabled(false);
       } else {
-        console.error("Failed to save meal selection.");
         alert("There was an error saving your selection. Please try again.");
-        setButtonsDisabled(false);
       }
     } catch (error) {
-      console.error("Error:", error);
       alert(
         "An error occurred while submitting your selection. Please try again."
       );
+    } finally {
       setButtonsDisabled(false);
     }
+  };
+
+  const handleSkip = () => {
+    setIsSkipSelected(true); // Set "Skip" state to true
+    setMealSelections((prev) => ({
+      ...prev,
+      [selectedDay]: { selection: "No food selected" },
+    }));
+    setButtonsDisabled(true);
   };
 
   const isPastDay = disabledDays.includes(selectedDay);
@@ -298,11 +312,12 @@ function MealSelectionPage() {
         setDay={changeDayWithAnimation}
         disabledDays={disabledDays}
         bookedDays={bookedDays}
+        isSkipSelected={isSkipSelected} // Pass the "Skip" state
       />
-      {memoizedMealSelectionPane}
+      <div className={fadeClass}>{memoizedMealSelectionPane}</div>
       <FinalSubmitBtn
-        disabled={isPastDay || buttonsDisabled}
-        onSubmit={handleMealSelection}
+        disabled={buttonsDisabled}
+        onSubmit={isSkipSelected ? handleSkip : handleMealSelection}
       />
     </div>
   );
