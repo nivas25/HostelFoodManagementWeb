@@ -18,7 +18,7 @@ const getResidentById = async (req, res) => {
 const getMealSelectionByResidentId = async (req, res) => {
   try {
     const residentId = req.params.residentID;
-    const mealSelection = await MealSelection.findOne({
+    const mealSelection = await MealSelection.find({
       residentId: residentId,
     });
 

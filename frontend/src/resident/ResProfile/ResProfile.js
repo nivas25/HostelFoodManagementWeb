@@ -176,21 +176,21 @@ function ResProfile() {
         const response = await axios.get(
           `http://localhost:5000/api/profileMealSelection/mealSelection/${residentId}`
         );
-        // Check if the response is in the expected format
-        if (response.data) {
-          setMeals([response.data]); // Wrap in an array if you're expecting a single object
+        if (Array.isArray(response.data)) {
+          setMeals(response.data);
+          console.log("Fetched Meals:", response.data); // Log the fetched meals
         } else {
-          console.warn("No meal selections found for this resident.");
-          setMeals([]); // Set meals to an empty array if none found
+          console.warn("Expected an array but received:", response.data);
+          setMeals([]);
         }
       } catch (error) {
         console.error("Error fetching meal selections:", error);
-        setMeals([]); // Optionally reset meals on error
+        setMeals([]);
       }
     };
 
     fetchMealSelections();
-  }, []); // Empty dependency array means this runs once on component mount
+  }, []);
 
   useEffect(() => {
     const mealForSelectedDay = meals.find(

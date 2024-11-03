@@ -184,7 +184,8 @@ function MealSelectionPage() {
 
   useEffect(() => {
     const today = new Date();
-    const currentDay = today.toLocaleDateString("en-US", { weekday: "long" });
+    // const currentDay = today.toLocaleDateString("en-US", { weekday: "long" });
+    const currentDay = "Monday";
     const currentHour = today.getHours();
     const currentMinute = today.getMinutes();
     const residentId = localStorage.getItem("residentId");
