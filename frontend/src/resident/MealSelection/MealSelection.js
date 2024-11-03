@@ -185,7 +185,8 @@ function MealSelectionPage() {
   useEffect(() => {
     const today = new Date();
     const currentDay = today.toLocaleDateString("en-US", { weekday: "long" });
-    // const currentDay = "Sunday";
+    const currentHour = today.getHours();
+    const currentMinute = today.getMinutes();
     const residentId = localStorage.getItem("residentId");
 
     // Fetch stored selections and booked days for the logged-in user
@@ -198,14 +199,24 @@ function MealSelectionPage() {
     setMealSelections(storedSelections);
     setBookedDays(storedBookedDays);
 
-    // Reset data on Sunday only if the user is switching accounts or if it is a new week
-    if (currentDay === "Sunday") {
-      localStorage.removeItem("bookedDays");
-      localStorage.removeItem("mealSelections");
-      localStorage.removeItem("pastDays");
-      setBookedDays([]);
-      setMealSelections({});
+    // Check if it is past the reset time (2:00 AM on Sunday)
+    if (
+      currentDay === "Sunday" &&
+      (currentHour > 2 || (currentHour === 2 && currentMinute > 0))
+    ) {
+      // Clear data only if it's the first login after the reset time on Sunday
+      if (!localStorage.getItem("isResetDone")) {
+        localStorage.removeItem(`bookedDays_${residentId}`);
+        localStorage.removeItem(mealSelectionsKey);
+        localStorage.removeItem(`pastDays_${residentId}`);
+        setBookedDays([]);
+        setMealSelections({});
+        localStorage.setItem("isResetDone", "true"); // Set a flag to indicate reset has been done
+      }
     } else {
+      // Clear the reset flag if it is not Sunday or if it's before the cutoff time
+      localStorage.removeItem("isResetDone");
+
       const daysOfWeek = [
         "Monday",
         "Tuesday",
@@ -272,23 +283,27 @@ function MealSelectionPage() {
         );
         setMealSelections(updatedSelections);
 
-        if (isEating) {
-          const updatedBookedDays = [...bookedDays, selectedDay];
-          localStorage.setItem(
-            `bookedDays_${residentId}`,
-            JSON.stringify(updatedBookedDays)
-          );
-          setBookedDays(updatedBookedDays);
-        }
+        // Update booked days for both "Yes" and "Skip" selections
+        const updatedBookedDays = [...bookedDays, selectedDay];
+        localStorage.setItem(
+          `bookedDays_${residentId}`,
+          JSON.stringify(updatedBookedDays)
+        );
+        setBookedDays(updatedBookedDays);
 
-        await fetch("http://localhost:5000/api/mealSelectionRoutes/increment", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            day: selectedDay,
-            meal: isEating ? "all" : "none",
-          }),
-        });
+        if (isEating) {
+          await fetch(
+            "http://localhost:5000/api/mealSelectionRoutes/increment",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                day: selectedDay,
+                meal: "all",
+              }),
+            }
+          );
+        }
       } else {
         alert("There was an error saving your selection. Please try again.");
       }
